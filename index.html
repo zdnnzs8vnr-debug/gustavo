@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GustavoEuro — Circolo Operativo Riservato</title>
+<meta name="description" content="Un circolo operativo riservato, accessibile solo su invito.">
+<meta name="theme-color" content="#08080a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080a; --panel:rgba(255,255,255,.035); --panel2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.09); --txt:#ededed; --dim:#93939c; --dim2:#6d6d76;
+  --gold:#d4af37; --gold2:#f6de8a; --green:#00e07a; --red:#ff4d5e;
+  --r:18px; --sh:0 20px 60px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 620px at 12% -12%, rgba(212,175,55,.15), transparent 62%),
+    radial-gradient(720px 520px at 92% 6%, rgba(0,224,122,.11), transparent 62%),
+    radial-gradient(900px 760px at 50% 112%, rgba(212,175,55,.08), transparent 62%);
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+h1,h2,h3,.disp{font-family:Sora,sans-serif;letter-spacing:.02em}
+
+/* ---------- HEADER ---------- */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(8,8,10,.85),rgba(8,8,10,.35));
+  border-bottom:1px solid var(--line);transition:opacity .4s, transform .4s;
+}
+header.hide{opacity:0;transform:translateY(-100%);pointer-events:none}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.logo-mark{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--gold),#a5831f);color:#0a0a0a;font-weight:800;font-size:18px;
+  box-shadow:0 0 22px rgba(212,175,55,.35);font-family:Sora,sans-serif;
+}
+.logo-txt{font-family:Sora,sans-serif;font-weight:800;font-size:16px;letter-spacing:.14em}
+.logo-txt span{background:linear-gradient(90deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hright{display:flex;align-items:center;gap:10px}
+.iconbtn{
+  width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--panel);
+  color:var(--txt);display:grid;place-items:center;cursor:pointer;position:relative;transition:.25s;font-size:16px
+}
+.iconbtn:hover{border-color:rgba(212,175,55,.5);background:rgba(212,175,55,.08)}
+.badge{
+  position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:var(--gold);
+  color:#0a0a0a;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px
+}
+.langs{display:flex;gap:4px;border:1px solid var(--line);border-radius:12px;padding:3px;background:var(--panel)}
+.lang{
+  padding:6px 9px;border-radius:9px;font-size:11px;font-weight:600;letter-spacing:.06em;cursor:pointer;
+  color:var(--dim);transition:.2s;border:none;background:none;font-family:Inter,sans-serif
+}
+.lang:hover{color:var(--txt)}
+.lang.on{background:linear-gradient(135deg,var(--gold),#b8912a);color:#0a0a0a}
+
+/* ---------- SCREENS ---------- */
+.screen{position:fixed;inset:0;z-index:10;display:none;overflow-y:auto;overflow-x:hidden;padding:104px 20px 80px}
+.screen.active{display:block;animation:fade .5s cubic-bezier(.22,.61,.36,1)}
+.screen.center{align-items:center;justify-content:center;text-align:center}
+.screen.center.active{display:flex;flex-direction:column;padding:20px}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.wrap{max-width:720px;margin:0 auto;width:100%}
+.wrap.narrow{max-width:520px}
+
+/* ---------- TYPE ---------- */
+.eyebrow{font-size:11px;letter-spacing:.28em;color:var(--gold);font-weight:600;text-transform:uppercase;margin-bottom:14px}
+.title{font-size:clamp(24px,5vw,38px);font-weight:700;line-height:1.15;margin-bottom:14px}
+.sub{color:var(--dim);font-size:14.5px;line-height:1.7;margin-bottom:26px}
+.small{font-size:12px;color:var(--dim2);line-height:1.7}
+
+/* ---------- CARDS / BUTTONS ---------- */
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;
+  transition:.3s cubic-bezier(.22,.61,.36,1);position:relative;overflow:hidden
+}
+.card:hover{border-color:rgba(212,175,55,.45);transform:translateY(-2px);box-shadow:var(--sh)}
+.menu{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.mitem{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;
+  background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;transition:.3s;
+}
+.mitem:hover{border-color:rgba(212,175,55,.55);transform:translateX(4px);background:linear-gradient(90deg,rgba(212,175,55,.12),rgba(255,255,255,.02))}
+.mitem .lbl{font-family:Sora,sans-serif;font-weight:700;font-size:16px;letter-spacing:.06em}
+.mitem .sublbl{font-size:12px;color:var(--dim);margin-top:4px;letter-spacing:.02em}
+.mitem .arrow{color:var(--gold);font-size:20px;transition:.3s}
+.mitem:hover .arrow{transform:translateX(4px)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;
+  padding:15px 26px;border-radius:14px;border:1px solid var(--line);background:var(--panel);
+  color:var(--txt);font-family:Sora,sans-serif;font-weight:600;font-size:13.5px;letter-spacing:.08em;
+  transition:.28s;text-decoration:none;width:100%
+}
+.btn:hover{border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.1);transform:translateY(-1px)}
+.btn.gold{background:linear-gradient(135deg,var(--gold),#b8912a);color:#0a0a0a;border-color:transparent;box-shadow:0 10px 30px rgba(212,175,55,.22)}
+.btn.gold:hover{box-shadow:0 14px 40px rgba(212,175,55,.4)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:11px 18px;font-size:12px;width:auto}
+.btnrow{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.back{
+  background:none;border:none;color:var(--dim);cursor:pointer;font-size:12px;letter-spacing:.16em;
+  font-weight:600;padding:8px 0;margin-bottom:18px;font-family:Sora,sans-serif;transition:.2s
+}
+.back:hover{color:var(--gold)}
+
+/* ---------- ROWS ---------- */
+.row{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer;
+  border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:10px;transition:.28s;
+  background:var(--panel)
+}
+.row:hover{border-color:rgba(0,224,122,.45);background:rgba(0,224,122,.06);transform:translateX(3px)}
+.row .price{font-family:Sora,sans-serif;font-weight:800;font-size:19px;color:var(--gold2);white-space:nowrap}
+.row .desc{text-align:right;font-size:12.5px;color:var(--dim);line-height:1.5}
+.row .desc b{color:var(--txt);font-weight:600}
+
+/* ---------- FORM ---------- */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;letter-spacing:.16em;color:var(--dim);font-weight:600;margin-bottom:7px;text-transform:uppercase}
+input,select,textarea{
+  width:100%;padding:14px 16px;border-radius:13px;border:1px solid var(--line);background:rgba(0,0,0,.35);
+  color:var(--txt);font-family:Inter,sans-serif;font-size:14.5px;transition:.25s;outline:none
+}
+input:focus,select:focus,textarea:focus{border-color:rgba(212,175,55,.6);box-shadow:0 0 0 3px rgba(212,175,55,.1)}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='%2393939c'%3E%3Cpath d='M6 8 0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.err{color:var(--red);font-size:12.5px;margin-top:8px;display:none}
+.err.on{display:block}
+
+/* ---------- TELEGRAM / OPTIONS ---------- */
+.tglogo{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#29b6f6,#0288d1);display:grid;place-items:center;margin:0 auto 20px;font-size:30px;box-shadow:0 0 40px rgba(41,182,246,.4)}
+
+/* ---------- CRYPTO ---------- */
+.addr{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;word-break:break-all;
+  background:rgba(0,0,0,.45);border:1px solid var(--line);border-radius:13px;padding:16px;margin:14px 0;line-height:1.7
+}
+.pulse{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:18px;font-size:13px;color:var(--dim)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.82)}}
+
+/* ---------- PROCESSING ---------- */
+.proc{border-radius:var(--r);border:1px solid rgba(0,224,122,.35);background:rgba(0,224,122,.07);padding:26px;text-align:center;transition:.6s}
+.proc.fail{border-color:rgba(255,77,94,.45);background:rgba(255,77,94,.08)}
+.proc .spinner{width:44px;height:44px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--green);border-radius:50%;margin:0 auto 18px;animation:spin 1s linear infinite}
+.proc.fail .spinner{border-top-color:var(--red);animation:none;border-color:rgba(255,77,94,.3)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- ACCORDION ---------- */
+.acc{border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;background:var(--panel)}
+.acc h4{padding:17px 18px;cursor:pointer;font-family:Sora,sans-serif;font-size:13px;letter-spacing:.06em;display:flex;justify-content:space-between;gap:12px;align-items:center;font-weight:600}
+.acc h4 span{color:var(--gold);transition:.3s;font-size:18px}
+.acc.open h4 span{transform:rotate(45deg)}
+.acc .body{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 18px}
+.acc.open .body{max-height:600px;padding-bottom:18px}
+.acc .body p{font-size:13.5px;color:var(--dim);line-height:1.8;white-space:pre-line}
+
+/* ---------- LEGAL ---------- */
+.legal h3{font-family:Sora,sans-serif;font-size:14px;color:var(--gold);margin:22px 0 8px;letter-spacing:.05em}
+.legal p{font-size:13.5px;color:var(--dim);line-height:1.85;margin-bottom:8px}
+.legal .upd{font-size:12px;color:var(--dim2);margin-bottom:6px}
+
+/* ---------- LOADERS ---------- */
+.bar{width:min(320px,74vw);height:3px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden;margin:22px auto 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--green));box-shadow:0 0 14px rgba(212,175,55,.6)}
+.pct{font-family:Sora,sans-serif;font-size:12px;color:var(--dim);margin-top:10px;letter-spacing:.2em}
+.rot{font-size:11.5px;letter-spacing:.24em;color:var(--dim2);height:16px;margin-top:16px;text-transform:uppercase}
+.spinword{animation:fade .5s}
+.biglogo{font-family:Sora,sans-serif;font-weight:800;font-size:clamp(26px,7vw,40px);letter-spacing:.16em;margin-bottom:6px}
+.biglogo span{background:linear-gradient(90deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.mark{width:70px;height:70px;border-radius:22px;margin:0 auto 22px;display:grid;place-items:center;font-size:34px;font-weight:800;font-family:Sora,sans-serif;color:#0a0a0a;background:linear-gradient(135deg,var(--gold),#a5831f);box-shadow:0 0 50px rgba(212,175,55,.4);animation:breath 2.6s ease-in-out infinite}
+@keyframes breath{0%,100%{transform:scale(1);box-shadow:0 0 50px rgba(212,175,55,.35)}50%{transform:scale(1.06);box-shadow:0 0 70px rgba(212,175,55,.55)}}
+.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* ---------- WELCOME ---------- */
+.welcome{font-family:Sora,sans-serif;font-weight:700;line-height:1.5;font-size:clamp(15px,3.4vw,21px);margin:26px 0 30px}
+.welcome .u{position:relative;display:inline;background-image:linear-gradient(90deg,var(--gold2),var(--gold));background-repeat:no-repeat;background-size:100% 2px;background-position:0 100%;padding-bottom:3px}
+.welcome .g{color:var(--dim)}
+.big{font-size:clamp(28px,7vw,44px);font-weight:800;margin-bottom:10px}
+
+/* ---------- TOAST ---------- */
+#toast{
+  position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120%);z-index:200;
+  background:linear-gradient(135deg,var(--gold),#b8912a);color:#0a0a0a;padding:13px 24px;border-radius:14px;
+  font-weight:700;font-size:13px;transition:.4s cubic-bezier(.22,.61,.36,1);box-shadow:var(--sh);font-family:Sora,sans-serif
+}
+#toast.on{transform:translateX(-50%) translateY(0)}
+
+/* ---------- FOOTER ---------- */
+footer{margin-top:54px;padding-top:26px;border-top:1px solid var(--line)}
+.flinks{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-bottom:14px}
+.flinks button{background:none;border:none;color:var(--dim2);font-size:11px;letter-spacing:.14em;cursor:pointer;font-family:Inter,sans-serif;transition:.2s;font-weight:600}
+.flinks button:hover{color:var(--gold)}
+.fstatus{text-align:center;font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.18)}
+.secure{display:flex;gap:8px;justify-content:center;align-items:center;font-size:11px;letter-spacing:.16em;color:var(--green);margin-bottom:18px;font-weight:600}
+
+.tag{display:inline-block;font-size:10px;letter-spacing:.18em;padding:5px 11px;border-radius:8px;border:1px solid rgba(0,224,122,.35);color:var(--green);margin-bottom:16px;font-weight:600}
+.skel{height:10px;border-radius:6px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.12),rgba(255,255,255,.05));background-size:200% 100%;animation:sk 1.4s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+</style>
+</head>
+<body>
+
+<header id="hdr" class="hide">
+  <div class="logo" onclick="go('home')">
+    <div class="logo-mark">€</div>
+    <div class="logo-txt">GUSTAVO<span>EURO</span></div>
+  </div>
+  <div class="hright">
+    <div class="langs" id="langs"></div>
+    <div class="iconbtn" onclick="go('cart')" title="Cart">🛒<span class="badge" id="cartBadge" style="display:none">0</span></div>
+  </div>
+</header>
+
+<!-- ============ LOADER 1 ============ -->
+<div class="screen center active" id="v-loader1">
+  <div class="mark">€</div>
+  <div class="biglogo">GUSTAVO<span>EURO</span></div>
+  <div class="small" data-i18n="brand_sub">CIRCOLO OPERATIVO RISERVATO</div>
+  <div class="bar"><i id="bar1"></i></div>
+  <div class="rot" id="rot1"></div>
+</div>
+
+<!-- ============ GATE ============ -->
+<div class="screen center" id="v-gate">
+  <div class="wrap narrow">
+    <div class="tag" data-i18n="gate_tag">ACCESSO RISERVATO</div>
+    <div class="title" data-i18n="gate_title">INSERISCI IL CODICE D'INVITO</div>
+    <div class="sub" data-i18n="gate_sub">Il circolo è accessibile solo su invito. Inserisci il codice per sbloccare tutti i prodotti.</div>
+    <div class="field">
+      <input id="code" type="password" data-i18n-ph="gate_ph" placeholder="Codice d'accesso" autocomplete="off">
+    </div>
+    <div class="err" id="gateErr" data-i18n="gate_err">Codice non valido. Riprova.</div>
+    <button class="btn gold" onclick="checkCode()" data-i18n="gate_btn">SBLOCCA ACCESSO</button>
+    <div class="small" style="margin-top:16px" data-i18n="gate_hint">Codice demo: GUSTAVOEURO</div>
+  </div>
+</div>
+
+<!-- ============ LOADER 2 (criptato) ============ -->
+<div class="screen center" id="v-loader2">
+  <div class="mark">🔒</div>
+  <div class="title" style="margin-bottom:4px" data-i18n="enc_title">ACCESSO CRIPTATO</div>
+  <div class="secure" data-i18n="enc_secure">END-TO-END ENCRYPTION</div>
+  <div class="bar" style="width:min(420px,80vw)"><i id="bar2"></i></div>
+  <div class="pct"><span id="pct2">0</span>%</div>
+  <div class="rot" id="rot2"></div>
+</div>
+
+<!-- ============ HOME ============ -->
+<div class="screen" id="v-home">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="brand_sub">CIRCOLO OPERATIVO RISERVATO</div>
+    <div class="welcome">
+      <div class="u" data-i18n="w1">BENVENUTO.</div>
+      <div style="height:8px"></div>
+      <div class="u" data-i18n="w2">UN CIRCOLO OPERATIVO RISERVATO, ACCESSIBILE SOLO SU INVITO.</div>
+      <div style="height:8px"></div>
+      <div class="u" data-i18n="w3">FORNIAMO SOLO RISULTATI A CHI SA GIÀ COSA CHIEDERE.</div>
+      <div style="height:8px"></div>
+      <div class="u" data-i18n="w4">NON SIAMO QUI PER GIOCARE, SOLO PERSONE SERIE E CON VOGLIA DI SVOLTARE LA PROPRIA VITA!</div>
+    </div>
+    <div class="menu">
+      <div class="mitem" onclick="go('contact')">
+        <div><div class="lbl" data-i18n="b_contact">CONTATTAMI</div><div class="sublbl" data-i18n="b_contact_sub">scrivimi direttamente su Telegram</div></div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="mitem" onclick="go('bank')">
+        <div><div class="lbl" data-i18n="b_bank">BANCONOTE</div><div class="sublbl" data-i18n="b_bank_sub">denaro contante · tagli 10 / 20 / 50 / misto</div></div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="mitem" onclick="go('trans')">
+        <div><div class="lbl" data-i18n="b_trans">RICARICA PAYPAL</div><div class="sublbl" data-i18n="b_trans_sub">ricarica il saldo del tuo PayPal</div></div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="mitem" onclick="go('feed')">
+        <div><div class="lbl" data-i18n="b_feed">FEEDBACK</div><div class="sublbl" data-i18n="b_feed_sub">recensioni verificate</div></div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="mitem" onclick="go('faq')">
+        <div><div class="lbl" data-i18n="b_faq">FAQ &amp; SICUREZZA</div><div class="sublbl" data-i18n="b_faq_sub">come funziona · protocolli · tempi</div></div>
+        <div class="arrow">→</div>
+      </div>
+    </div>
+    <footer>
+      <div class="secure">🔒 <span data-i18n="sec_line">CONNESSIONE CRITTOGRAFATA · END-TO-END</span></div>
+      <div class="flinks">
+        <button onclick="go('privacy')" data-i18n="legal_privacy">INFORMATIVA PRIVACY</button>
+        <button onclick="go('terms')" data-i18n="legal_terms">TERMINI E CONDIZIONI</button>
+        <button onclick="go('cookies')" data-i18n="legal_cookies">COOKIE POLICY</button>
+      </div>
+      <div class="fstatus" data-i18n="footer_status">CONNESSIONE CRITTOGRAFATA // CANALE SICURO // V2.4.1</div>
+    </footer>
+  </div>
+</div>
+
+<!-- ============ TELEGRAM (generic) ============ -->
+<div class="screen center" id="v-telegram">
+  <div class="wrap narrow">
+    <div class="tglogo">✈️</div>
+    <div class="title" data-i18n="tg_title">HAI TELEGRAM?</div>
+    <div class="sub" data-i18n="tg_sub">Tutto il circolo gira su Telegram: ordini, tracking e supporto.</div>
+    <div class="btnrow">
+      <button class="btn gold" onclick="tgYes()" data-i18n="tg_yes">SÌ, HO TELEGRAM</button>
+      <button class="btn" onclick="tgNo()" data-i18n="tg_no">NO, NON HO TELEGRAM</button>
+    </div>
+    <div class="small" id="tgHint" style="margin-top:16px"></div>
+    <button class="back" style="margin-top:20px" onclick="tgBack()" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<!-- ============ CONTACT ============ -->
+<div class="screen center" id="v-contact">
+  <div class="wrap narrow">
+    <div class="title" data-i18n="contact_title">CONTATTAMI</div>
+    <div class="sub" data-i18n="contact_desc">Scrivimi direttamente su Telegram: risposta rapida, canale privato.</div>
+    <button class="btn gold" onclick="askTelegram('contact',null)" data-i18n="open_tg">APRI TELEGRAM</button>
+    <button class="back" style="margin-top:22px" onclick="go('home')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<!-- ============ BANKNOTES ============ -->
+<div class="screen" id="v-bank">
+  <div class="wrap">
+    <button class="back" onclick="go('home')" data-i18n="back">← INDIETRO</button>
+    <div class="title" data-i18n="bank_title">SCEGLI IL TAGLIO</div>
+    <div class="sub" data-i18n="bank_desc">Seleziona il taglio delle banconote.</div>
+    <div class="menu" id="denMenu"></div>
+  </div>
+</div>
+
+<!-- ============ PRICELIST ============ -->
+<div class="screen" id="v-list">
+  <div class="wrap">
+    <button class="back" onclick="go('bank')" data-i18n="back">← INDIETRO</button>
+    <div class="title" id="listTitle"></div>
+    <div class="sub" data-i18n="list_sub">Scegli il quantitativo. Il prezzo totale è già calcolato.</div>
+    <div id="listRows"></div>
+  </div>
+</div>
+
+<!-- ============ CHOICE ============ -->
+<div class="screen center" id="v-choice">
+  <div class="wrap narrow">
+    <div class="title" data-i18n="choice_title">COSA VUOI FARE?</div>
+    <div class="card" id="choiceInfo" style="margin-bottom:20px;text-align:left"></div>
+    <div class="btnrow">
+      <button class="btn gold" onclick="choiceNow()" data-i18n="choice_order">COMPLETA ORDINE SUBITO</button>
+      <button class="btn" onclick="choiceCart()" data-i18n="choice_cart">AGGIUNGI AL CARRELLO</button>
+    </div>
+    <button class="back" style="margin-top:20px" onclick="go('list')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<!-- ============ TRANSFERS (PayPal) ============ -->
+<div class="screen" id="v-trans">
+  <div class="wrap">
+    <button class="back" onclick="go('home')" data-i18n="back">← INDIETRO</button>
+    <div class="title" data-i18n="trans_title">RICARICA PAYPAL</div>
+    <div class="sub" style="white-space:pre-line" data-i18n="trans_intro"></div>
+    <div class="btnrow">
+      <button class="btn gold" onclick="go('transList')" data-i18n="trans_yes">SÌ, HO CAPITO</button>
+      <button class="btn" onclick="go('home')" data-i18n="trans_no">NO, PREFERISCO NON FARLO</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="v-transList">
+  <div class="wrap">
+    <button class="back" onclick="go('trans')" data-i18n="back">← INDIETRO</button>
+    <div class="title" data-i18n="trans_list_title">SCEGLI LA RICARICA</div>
+    <div id="transRows"></div>
+  </div>
+</div>
+
+<div class="screen center" id="v-ppVerify">
+  <div class="wrap narrow">
+    <div class="title" data-i18n="pp_title">VERIFICA EMAIL PAYPAL</div>
+    <div class="sub" data-i18n="pp_sub">Inserisci email o username del tuo PayPal. Due volte, per sicurezza.</div>
+    <div class="field"><label data-i18n="pp_email">Email / Username PayPal</label><input id="pp1" type="text" autocomplete="off"></div>
+    <div class="field"><label data-i18n="pp_email2">Ripeti email / Username</label><input id="pp2" type="text" autocomplete="off"></div>
+    <div class="err" id="ppErr" data-i18n="pp_mismatch">Le due email non coincidono.</div>
+    <button class="btn gold" id="ppBtn" onclick="verifyPP()" data-i18n="pp_btn">VERIFICA E PROCEDI</button>
+    <div class="small" id="ppSpin" style="margin-top:14px;display:none" data-i18n="pp_verifying">Ricerca account collegato...</div>
+    <button class="back" style="margin-top:20px" onclick="go('transList')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<!-- ============ FEEDBACK ============ -->
+<div class="screen center" id="v-feed">
+  <div class="wrap narrow">
+    <div class="tglogo">✈️</div>
+    <div class="title" data-i18n="feed_title">PER VEDERE LE RECENSIONI DEVI AVERE TELEGRAM!</div>
+    <div class="btnrow">
+      <button class="btn gold" onclick="askTelegram('feedback',openChannel)" data-i18n="feed_btn">SÌ, HO GIÀ TELEGRAM</button>
+      <button class="btn" onclick="tgNo()" data-i18n="tg_no">NO, NON HO TELEGRAM</button>
+    </div>
+    <button class="back" style="margin-top:20px" onclick="go('home')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<!-- ============ FAQ ============ -->
+<div class="screen" id="v-faq">
+  <div class="wrap">
+    <button class="back" onclick="go('home')" data-i18n="back">← INDIETRO</button>
+    <div class="title" data-i18n="faq_title">FAQ &amp; SICUREZZA</div>
+    <div class="sub" data-i18n="faq_sub">Tocca una domanda per vedere la risposta.</div>
+    <div id="faqBox"></div>
+  </div>
+</div>
+
+<!-- ============ CHECKOUT ============ -->
+<div class="screen" id="v-checkout">
+  <div class="wrap">
+    <button class="back" onclick="go('home')" data-i18n="back">← INDIETRO</button>
+    <div class="title" data-i18n="co_title">DOVE SPEDIAMO IL PACCO?</div>
+    <div class="sub" data-i18n="co_sub">Compila i dati. Verranno allegati automaticamente al tuo ordine su Telegram.</div>
+    <div class="field"><label data-i18n="f_address">Indirizzo di casa</label><input id="f_addr" type="text" autocomplete="street-address"></div>
+    <div class="grid2">
+      <div class="field"><label data-i18n="f_civic">Numero civico</label><input id="f_civ" type="text"></div>
+      <div class="field"><label data-i18n="f_cap">Codice postale</label><input id="f_cap" type="text" inputmode="numeric"></div>
+    </div>
+    <div class="field"><label data-i18n="f_email">Email</label><input id="f_mail" type="email" autocomplete="email"></div>
+    <div class="grid2">
+      <div class="field"><label data-i18n="f_prefix">Prefisso</label><select id="f_pref"></select></div>
+      <div class="field"><label data-i18n="f_phone">Cellulare</label><input id="f_phone" type="tel" inputmode="tel"></div>
+    </div>
+    <div class="field">
+      <label data-i18n="f_ship">Linea di spedizione</label>
+      <select id="f_ship">
+        <option value="DHL">DHL</option>
+        <option value="BRT">BRT</option>
+        <option value="GLS">GLS</option>
+        <option value="POSTE ITALIANE">POSTE ITALIANE</option>
+        <option value="INPOST">INPOST (Locker)</option>
+      </select>
+    </div>
+    <div class="field" id="lockerField" style="display:none">
+      <label data-i18n="f_locker">Via del locker InPost</label><input id="f_locker" type="text">
+    </div>
+    <div class="card small" style="margin:18px 0;border-color:rgba(0,224,122,.3);background:rgba(0,224,122,.05)" data-i18n="co_note">Spedizione GRATUITA. Dopo la spedizione inviamo sempre il codice di tracciamento.</div>
+    <div class="err" id="coErr" data-i18n="co_err">Compila tutti i campi obbligatori.</div>
+    <button class="btn gold" onclick="submitCheckout()" data-i18n="co_btn">CONTINUA AI PAGAMENTI</button>
+  </div>
+</div>
+
+<!-- ============ PAYMENTS ============ -->
+<div class="screen" id="v-pay">
+  <div class="wrap">
+    <button class="back" onclick="go('checkout')" data-i18n="back">← INDIETRO</button>
+    <div class="secure" style="justify-content:flex-start" data-i18n="pay_header">PROTEZIONE END-TO-END · CRITTOGRAFIA ATTIVA</div>
+    <div class="title" data-i18n="pay_title">METODI DI PAGAMENTO DISPONIBILI</div>
+    <div class="sub" data-i18n="pay_sub">Accettiamo solo questi metodi.</div>
+    <div class="menu">
+      <div class="mitem" onclick="go('crQ')">
+        <div><div class="lbl" data-i18n="pay_crypto">CRYPTO</div><div class="sublbl" data-i18n="pay_crypto_note">l'unico pagamento anonimo, effettuabile direttamente nel sito</div></div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="mitem" onclick="go('bon')">
+        <div><div class="lbl" data-i18n="pay_bonifico">BONIFICO ISTANTANEO</div><div class="sublbl" data-i18n="pay_bonifico_note">completamento su Telegram</div></div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="mitem" onclick="go('amQ')">
+        <div><div class="lbl" data-i18n="pay_amazon">BUONI AMAZON</div><div class="sublbl" data-i18n="pay_amazon_note">paga con un buono Amazon</div></div>
+        <div class="arrow">→</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CRYPTO ============ -->
+<div class="screen center" id="v-crQ">
+  <div class="wrap narrow">
+    <div class="title" data-i18n="cr_q">HAI GIÀ UN PORTAFOGLIO CRYPTO?</div>
+    <div class="sub" id="crGuide" style="display:none" data-i18n="cr_guide">Crea un wallet gratuito su un exchange (es. Binance o Coinbase), acquista la crypto scelta e torna qui.</div>
+    <div class="btnrow">
+      <button class="btn gold" onclick="go('crConfirm')" data-i18n="cr_yes">SÌ, HO GIÀ UN WALLET CRYPTO</button>
+      <button class="btn" onclick="showGuide()" data-i18n="cr_no">NO, NON HO UN WALLET</button>
+    </div>
+    <button class="back" style="margin-top:20px" onclick="go('pay')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<div class="screen center" id="v-crConfirm">
+  <div class="wrap narrow">
+    <div class="title" data-i18n="cr_confirm">CONFERMA ORDINE</div>
+    <div class="sub" data-i18n="cr_choose">Scegli la crypto da inviare.</div>
+    <div class="menu" id="coinMenu"></div>
+    <button class="back" style="margin-top:20px" onclick="go('crQ')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<div class="screen center" id="v-crAddr">
+  <div class="wrap narrow">
+    <div class="title" id="coinName"></div>
+    <div class="sub" data-i18n="cr_send">Invia esattamente a questo indirizzo:</div>
+    <div class="addr" id="coinAddr"></div>
+    <button class="btn sm" onclick="copyAddr()" data-i18n="copy">COPIA INDIRIZZO</button>
+    <div class="pulse"><span class="dot"></span><span id="waitTxt"></span></div>
+    <button class="btn gold" style="margin-top:26px" onclick="go('proc')" data-i18n="cr_done">ORDINE COMPLETATO</button>
+    <button class="back" style="margin-top:18px" onclick="go('crConfirm')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<div class="screen center" id="v-proc">
+  <div class="wrap narrow">
+    <div class="proc" id="procBox">
+      <div class="spinner"></div>
+      <div class="title" id="procTitle" data-i18n="proc_title">STIAMO ELABORANDO IL TUO ORDINE</div>
+      <div class="sub" id="procSub" data-i18n="proc_sub">Per il codice di tracciamento o informazioni a riguardo, contattami.</div>
+      <button class="btn gold" onclick="openTG()" data-i18n="proc_contact">APRI TELEGRAM</button>
+    </div>
+    <button class="back" style="margin-top:22px" onclick="go('home')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<!-- ============ BONIFICO ============ -->
+<div class="screen center" id="v-bon">
+  <div class="wrap narrow">
+    <div class="title" data-i18n="bon_title">BONIFICO ISTANTANEO</div>
+    <div class="sub" data-i18n="bon_desc">Per completare questo tipo di pagamento è necessario avere TELEGRAM.</div>
+    <div class="btnrow">
+      <button class="btn gold" onclick="askTelegram('bonifico',openOrderTG)" data-i18n="tg_yes">SÌ, HO TELEGRAM</button>
+      <button class="btn" onclick="tgNo()" data-i18n="tg_no">NO, NON HO TELEGRAM</button>
+    </div>
+    <button class="back" style="margin-top:20px" onclick="go('pay')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<!-- ============ AMAZON ============ -->
+<div class="screen center" id="v-amQ">
+  <div class="wrap narrow">
+    <div class="title" data-i18n="am_q">HAI GIÀ UN BUONO AMAZON?</div>
+    <div class="btnrow">
+      <button class="btn gold" onclick="go('amCode')" data-i18n="am_yes">SÌ, CE L'HO</button>
+      <button class="btn" onclick="askTelegram('amazon',null)" data-i18n="am_no">NO, NON CE L'HO</button>
+    </div>
+    <button class="back" style="margin-top:20px" onclick="go('pay')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<div class="screen center" id="v-amCode">
+  <div class="wrap narrow">
+    <div class="title" data-i18n="am_code_title">INSERISCI IL CODICE DEL BUONO</div>
+    <div class="field"><input id="amCode" type="text" data-i18n-ph="am_code_ph" placeholder="Codice del buono Amazon"></div>
+    <div class="card" style="padding:22px;margin:16px 0">
+      <div style="font-size:12px;color:var(--dim);letter-spacing:.14em;margin-bottom:10px" data-i18n="am_photo_lbl">ESEMPIO BUONO</div>
+      <div style="font-family:Sora,sans-serif;font-weight:700;font-size:18px;color:var(--gold2)">amazon<span style="color:var(--txt)"> voucher</span></div>
+      <div class="small" style="margin-top:8px">AQ-XXXXXX-XXXXXX</div>
+    </div>
+    <button class="btn gold" onclick="sendAmazon()" data-i18n="am_send">INVIA SU TELEGRAM</button>
+    <button class="back" style="margin-top:18px" onclick="go('amQ')" data-i18n="back">← INDIETRO</button>
+  </div>
+</div>
+
+<!-- ============ CART ============ -->
+<div class="screen" id="v-cart">
+  <div class="wrap">
+    <button class="back" onclick="go('home')" data-i18n="back">← INDIETRO</button>
+    <div class="title" data-i18n="cart_title">CARRELLO</div>
+    <div id="cartBox"></div>
+    <div id="cartFoot" style="display:none">
+      <div class="row" style="cursor:default;border-color:rgba(212,175,55,.4)">
+        <div class="lbl" style="font-family:Sora;font-weight:700" data-i18n="cart_total">TOTALE</div>
+        <div class="price" id="cartTotal"></div>
+      </div>
+      <button class="btn gold" style="margin-top:12px" onclick="askTelegram('checkout',()=>go('checkout'))" data-i18n="cart_checkout">PROCEDI AL CHECKOUT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LEGAL ============ -->
+<div class="screen" id="v-privacy"><div class="wrap legal" id="privacyBox"></div></div>
+<div class="screen" id="v-terms"><div class="wrap legal" id="termsBox"></div></div>
+<div class="screen" id="v-cookies"><div class="wrap legal" id="cookiesBox"></div></div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   GUSTAVOEURO — single file app
+   ========================================================= */
+const CONFIG = {
+  ACCESS_CODE: "GUSTAVOEURO",
+  TG: "https://t.me/gustavoeuro",
+  CHANNEL: "https://t.me/+gBf54xWnFapjMmRh",
+  STORE_ANDROID: "https://play.google.com/store/apps/details?id=org.telegram.messenger",
+  STORE_IOS: "https://apps.apple.com/app/telegram-messenger/id686449807",
+  COINS: {
+    SOL: { name:"Solana (SOL)", addr:"Rh2z4dzfHqE5Sd3DEV424ZWUE6XkCpNoPD7DgLiFCcV", wait:"wait_ex" },
+    BTC: { name:"Bitcoin (BTC)", addr:"bc1qcjcf7kunlrla8qn6jwxg00hyjj6w8nnr67lk8v", wait:"wait_bc" },
+    LTC: { name:"Litecoin (LTC)", addr:"ltc1qpayxkexa48s6atp48quev2p2f8xnp79pa8zlkx", wait:"wait_bc" }
+  }
+};
+
+const PRICES = {
+  "10": [{p:30,pp:3.2},{p:50,pp:2.8},{p:75,pp:2.5},{p:100,pp:2.2},{p:150,pp:1.9}],
+  "20": [{p:30,pp:8},{p:50,pp:7.5},{p:75,pp:7},{p:100,pp:6.5},{p:150,pp:5.8}],
+  "50": [{p:30,pp:12},{p:50,pp:11},{p:75,pp:9.5},{p:100,pp:8.5},{p:150,pp:7.8},{p:200,pp:7}],
+  "misto":[{p:50,pp:5.5},{p:100,pp:5},{p:150,pp:4.5},{p:200,pp:4}]
+};
+
+const TRANSFERS = [
+  {pay:120,bal:360},{pay:150,bal:680},{pay:180,bal:930},{pay:220,bal:1570},
+  {pay:280,bal:2140},{pay:320,bal:3400},{pay:380,bal:4800},{pay:470,bal:5800}
+];
+
+/* ---------------- I18N ---------------- */
+const I18N = {
+it:{
+ brand_sub:"CIRCOLO OPERATIVO RISERVATO",
+ gate_tag:"ACCESSO RISERVATO",
+ gate_title:"INSERISCI IL CODICE D'INVITO",
+ gate_sub:"Il circolo è accessibile solo su invito. Inserisci il codice per sbloccare tutti i prodotti.",
+ gate_ph:"Codice d'accesso", gate_btn:"SBLOCCA ACCESSO",
+ gate_err:"Codice non valido. Riprova.", gate_hint:"Codice demo: GUSTAVOEURO",
+ enc_title:"ACCESSO CRIPTATO", enc_secure:"END-TO-END ENCRYPTION",
+ enc_ok:"ACCESSO CONSENTITO",
+ rot1:["CONNESSIONE CRITTOGRAFATA","CANALE SICURO","HANDSHAKE IN CORSO"],
+ rot2:["HANDSHAKE END-TO-END","VERIFICA IDENTITÀ","CANALE SICURO ATTIVO","CRITTOGRAFIA END-TO-END","TUNNEL OFFSHORE"],
+ w1:"BENVENUTO.",
+ w2:"UN CIRCOLO OPERATIVO RISERVATO, ACCESSIBILE SOLO SU INVITO.",
+ w3:"FORNIAMO SOLO RISULTATI A CHI SA GIÀ COSA CHIEDERE.",
+ w4:"NON SIAMO QUI PER GIOCARE, SOLO PERSONE SERIE E CON VOGLIA DI SVOLTARE LA PROPRIA VITA!",
+ b_contact:"CONTATTAMI", b_contact_sub:"scrivimi direttamente su Telegram",
+ b_bank:"BANCONOTE", b_bank_sub:"denaro contante · tagli 10 / 20 / 50 / misto",
+ b_trans:"RICARICA PAYPAL", b_trans_sub:"ricarica il saldo del tuo PayPal",
+ b_feed:"FEEDBACK", b_feed_sub:"recensioni verificate",
+ b_faq:"FAQ & SICUREZZA", b_faq_sub:"come funziona · protocolli · tempi",
+ sec_line:"CONNESSIONE CRITTOGRAFATA · END-TO-END",
+ legal_privacy:"INFORMATIVA PRIVACY", legal_terms:"TERMINI E CONDIZIONI", legal_cookies:"COOKIE POLICY",
+ footer_status:"CONNESSIONE CRITTOGRAFATA // CANALE SICURO // V2.4.1",
+ tg_title:"HAI TELEGRAM?", tg_sub:"Tutto il circolo gira su Telegram: ordini, tracking e supporto.",
+ tg_yes:"SÌ, HO TELEGRAM", tg_no:"NO, NON HO TELEGRAM",
+ tg_hint:"Installalo dallo store, poi torna qui e premi SÌ.", back:"← INDIETRO",
+ contact_title:"CONTATTAMI", contact_desc:"Scrivimi direttamente su Telegram: risposta rapida, canale privato.", open_tg:"APRI TELEGRAM",
+ bank_title:"SCEGLI IL TAGLIO", bank_desc:"Seleziona il taglio delle banconote.",
+ den_10:"10 €", den_20:"20 €", den_50:"50 €", den_misto:"MISTO", den_misto_sub:"tagli misti",
+ list_title:"Listino Banconote da", list_sub:"Scegli il quantitativo. Il prezzo totale è già calcolato.",
+ per_piece:"al pezzo", pieces:"pezzi",
+ choice_title:"COSA VUOI FARE?", choice_order:"COMPLETA ORDINE SUBITO", choice_cart:"AGGIUNGI AL CARRELLO",
+ added:"Aggiunto al carrello",
+ trans_title:"RICARICA PAYPAL",
+ trans_intro:"Cos'è la ricarica PayPal?\n\nCarichiamo il saldo del tuo account PayPal tramite metodo Amici e Familiari. Ricevi il saldo concordato in 1-4 ore, senza commissioni visibili e immediatamente prelevabile.\n\nVuoi procedere?",
+ trans_yes:"SÌ, HO CAPITO", trans_no:"NO, PREFERISCO NON FARLO",
+ trans_list_title:"SCEGLI LA RICARICA", trans_balance:"Saldo",
+ pp_title:"VERIFICA EMAIL PAYPAL", pp_sub:"Inserisci email o username del tuo PayPal. Due volte, per sicurezza.",
+ pp_email:"Email / Username PayPal", pp_email2:"Ripeti email / Username",
+ pp_btn:"VERIFICA E PROCEDI", pp_verifying:"Ricerca account collegato...", pp_mismatch:"Le due email non coincidono.",
+ feed_title:"PER VEDERE LE RECENSIONI DEVI AVERE TELEGRAM!", feed_btn:"SÌ, HO GIÀ TELEGRAM",
+ faq_title:"FAQ & SICUREZZA", faq_sub:"Tocca una domanda per vedere la risposta.",
+ faq:[["CONNESSIONE SICURA","Crittografia end-to-end attiva // Nessun log salvato"],
+      ["COME FUNZIONA LA SPEDIZIONE?","Tutti i pacchetti vengono spediti in modalità stealth con packaging anonimo. La confezione esterna non riporta alcun riferimento al contenuto. Utilizziamo corrieri affidabili e forniamo tracking su Telegram. Tempi medi: EU 48-72h, Extra-EU 5-7 giorni."],
+      ["ACCETTATE PAGAMENTI ANONIMI?","Sì. Accettiamo Cryptovalute. I pagamenti crypto sono i più veloci e garantiscono anonimato totale."],
+      ["COME FUNZIONA LA RICARICA PAYPAL?","Dopo il pagamento, i fondi vengono trasferiti sul tuo PayPal entro 1-4 ore tramite metodo Amici e Familiari. Non ci sono commissioni visibili e il saldo risulta immediatamente disponibile e prelevabile."],
+      ["I MIEI DATI SONO AL SICURO?","Non conserviamo alcun dato personale. Le conversazioni Telegram sono criptate e i log vengono cancellati automaticamente ogni 24 ore. Non chiediamo mai documenti o informazioni identificative."],
+      ["PROTOCOLLI DI SICUREZZA","✓ Comunicazioni su canali criptati end-to-end\n✓ Nessuna conservazione di dati personali\n✓ Transazioni anonime tramite crypto\n✓ Server offshore in giurisdizioni sicure"]],
+ co_title:"DOVE SPEDIAMO IL PACCO?", co_sub:"Compila i dati. Verranno allegati automaticamente al tuo ordine su Telegram.",
+ f_address:"Indirizzo di casa", f_civic:"Numero civico", f_cap:"Codice postale", f_email:"Email",
+ f_prefix:"Prefisso", f_phone:"Cellulare", f_ship:"Linea di spedizione", f_locker:"Via del locker InPost",
+ co_note:"Spedizione GRATUITA. Dopo la spedizione inviamo sempre il codice di tracciamento.",
+ co_btn:"CONTINUA AI PAGAMENTI", co_err:"Compila tutti i campi obbligatori.",
+ pay_header:"PROTEZIONE END-TO-END · CRITTOGRAFIA ATTIVA", pay_title:"METODI DI PAGAMENTO DISPONIBILI",
+ pay_sub:"Accettiamo solo questi metodi.",
+ pay_crypto:"CRYPTO", pay_crypto_note:"l'unico pagamento anonimo, effettuabile direttamente nel sito",
+ pay_bonifico:"BONIFICO ISTANTANEO", pay_bonifico_note:"completamento su Telegram",
+ pay_amazon:"BUONI AMAZON", pay_amazon_note:"paga con un buono Amazon",
+ cr_q:"HAI GIÀ UN PORTAFOGLIO CRYPTO?", cr_yes:"SÌ, HO GIÀ UN WALLET CRYPTO", cr_no:"NO, NON HO UN WALLET",
+ cr_guide:"Crea un wallet gratuito su un exchange (es. Binance o Coinbase), acquista la crypto scelta e torna qui.",
+ cr_confirm:"CONFERMA ORDINE", cr_choose:"Scegli la crypto da inviare.",
+ cr_send:"Invia esattamente a questo indirizzo:", copy:"COPIA INDIRIZZO", copied:"Copiato!",
+ wait_ex:"In attesa di conferma da parte dell'exchange", wait_bc:"In attesa della conferma della blockchain",
+ cr_done:"ORDINE COMPLETATO", proc_title:"STIAMO ELABORANDO IL TUO ORDINE",
+ proc_sub:"Per il codice di tracciamento o informazioni a riguardo, contattami.",
+ proc_contact:"APRI TELEGRAM",
+ proc_fail:"PAGAMENTO NON RICEVUTO · ORDINE NON ANCORA PRESO IN CARICO. Torna indietro per completare l'ordine.",
+ bon_title:"BONIFICO ISTANTANEO", bon_desc:"Per completare questo tipo di pagamento è necessario avere TELEGRAM.",
+ am_q:"HAI GIÀ UN BUONO AMAZON?", am_yes:"SÌ, CE L'HO", am_no:"NO, NON CE L'HO",
+ am_code_title:"INSERISCI IL CODICE DEL BUONO", am_code_ph:"Codice del buono Amazon",
+ am_send:"INVIA SU TELEGRAM", am_photo_lbl:"ESEMPIO BUONO",
+ cart_title:"CARRELLO", cart_empty:"Il carrello è vuoto.", cart_total:"TOTALE", cart_checkout:"PROCEDI AL CHECKOUT", remove:"Rimuovi",
+ legal:{
+  privacy:["INFORMATIVA SULLA PRIVACY","Ultimo aggiornamento: Aprile 2026. Trattamento dei dati conforme alla normativa vigente, crittografia avanzata e nessuna condivisione con terze parti.",
+   ["1. RACCOLTA DEI DATI","GustavoEuro raccoglie esclusivamente i dati strettamente necessari per l'erogazione dei servizi richiesti.\nTipologie di dati raccolti:\n- Dati di contatto forniti volontariamente\n- Dati tecnici di navigazione (IP, browser, dispositivo)\n- Cookie tecnici essenziali per il funzionamento"],
+   ["2. FINALITÀ DEL TRATTAMENTO","I dati raccolti vengono utilizzati esclusivamente per:\n* Gestione delle richieste di contatto\n* Miglioramento dell'esperienza utente\n* Adempimenti di legge\n* Sicurezza della piattaforma"],
+   ["3. CONSERVAZIONE E SICUREZZA","I dati vengono conservati per il tempo strettamente necessario e protetti mediante crittografia avanzata. Tutti i dati vengono eliminati in modo sicuro al termine del periodo di conservazione previsto."],
+   ["4. DIRITTI DELL'INTERESSATO","L'utente ha diritto di accedere ai propri dati, richiederne la rettifica o la cancellazione, e opporsi al trattamento in qualsiasi momento contattando l'operatore tramite i canali ufficiali."],
+   ["5. TRASFERIMENTO DEI DATI","GustavoEuro non trasferisce, vende o condivide i dati personali degli utenti con terze parti, salvo obblighi di legge."]],
+  terms:["TERMINI E CONDIZIONI","Ultimo aggiornamento: Aprile 2026. Condizioni d'uso della piattaforma, responsabilità e regole operative del circolo.",
+   ["1. ACCETTAZIONE DEI TERMINI","L'accesso e l'utilizzo di GustavoEuro implica l'accettazione integrale dei presenti Termini e Condizioni. Se non accetti questi termini, ti invitiamo a non utilizzare i nostri servizi."],
+   ["2. DESCRIZIONE DEL SERVIZIO","GustavoEuro è una piattaforma informativa che fornisce accesso a contenuti digitali. L'utente riconosce che tutti i contenuti sono forniti a scopo puramente informativo e di intrattenimento."],
+   ["3. CONDOTTA DELL'UTENTE","L'utente si impegna a:\n* Non utilizzare il servizio per scopi illegali\n* Non tentare di compromettere la sicurezza della piattaforma\n* Non condividere informazioni riservate con terzi\n* Rispettare la proprietà intellettuale"],
+   ["4. LIMITAZIONE DI RESPONSABILITÀ","GustavoEuro non è responsabile per eventuali danni diretti o indiretti derivanti dall'uso o dall'impossibilità di utilizzo del servizio. Tutti i contenuti sono forniti \"così come sono\" senza garanzie di alcun tipo."],
+   ["5. MODIFICHE AI TERMINI","GustavoEuro si riserva il diritto di modificare i presenti termini in qualsiasi momento. Le modifiche saranno effettive dalla data di pubblicazione sulla piattaforma."]],
+  cookies:["COOKIE POLICY","Ultimo aggiornamento: ottobre 2026. Utilizziamo esclusivamente cookie tecnici essenziali per il funzionamento della piattaforma.",
+   ["1. COSA SONO I COOKIE","I cookie sono piccoli file di testo che vengono memorizzati sul tuo dispositivo quando visiti un sito web. GustavoEuro utilizza esclusivamente cookie tecnici essenziali."],
+   ["2. TIPOLOGIE DI COOKIE UTILIZZATI","Cookie tecnici essenziali:\n- Cookie di sessione: necessari per la navigazione\n- Cookie di sicurezza: protezione contro attacchi informatici\n- Cookie di preferenze: memorizzazione delle impostazioni utente\nGustavoEuro NON utilizza cookie di profilazione o tracciamento pubblicitario."],
+   ["3. GESTIONE DEI COOKIE","Puoi gestire le preferenze attraverso le impostazioni del tuo browser. Disabilitare i cookie tecnici potrebbe compromettere il funzionamento della piattaforma."],
+   ["4. COOKIE DI TERZE PARTI","GustavoEuro non incorpora cookie di terze parti né condivide dati con piattaforme esterne di advertising o analytics."],
+   ["5. DURATA DEI COOKIE","I cookie tecnici utilizzati hanno una durata massima di sessione o di 24 ore."],
+   ["6. AGGIORNAMENTI","La presente Cookie Policy può essere aggiornata periodicamente."]]
+ }
+},
+en:{
+ brand_sub:"PRIVATE OPERATING CIRCLE",
+ gate_tag:"RESTRICTED ACCESS",
+ gate_title:"ENTER YOUR INVITE CODE",
+ gate_sub:"The circle is invite-only. Enter the code to unlock all products.",
+ gate_ph:"Access code", gate_btn:"UNLOCK ACCESS",
+ gate_err:"Invalid code. Try again.", gate_hint:"Demo code: GUSTAVOEURO",
+ enc_title:"ENCRYPTED ACCESS", enc_secure:"END-TO-END ENCRYPTION",
+ enc_ok:"ACCESS GRANTED",
+ rot1:["ENCRYPTED CONNECTION","SECURE CHANNEL","HANDSHAKE IN PROGRESS"],
+ rot2:["END-TO-END HANDSHAKE","IDENTITY CHECK","SECURE CHANNEL ACTIVE","END-TO-END ENCRYPTION","OFFSHORE TUNNEL"],
+ w1:"WELCOME.",
+ w2:"A PRIVATE OPERATING CIRCLE, ACCESSIBLE BY INVITATION ONLY.",
+ w3:"WE ONLY DELIVER RESULTS TO THOSE WHO ALREADY KNOW WHAT TO ASK FOR.",
+ w4:"WE'RE NOT HERE TO PLAY — ONLY SERIOUS PEOPLE READY TO CHANGE THEIR LIVES!",
+ b_contact:"CONTACT ME", b_contact_sub:"message me directly on Telegram",
+ b_bank:"BANKNOTES", b_bank_sub:"cash · denominations 10 / 20 / 50 / mixed",
+ b_trans:"PAYPAL TOP-UP", b_trans_sub:"top up your PayPal balance",
+ b_feed:"REVIEWS", b_feed_sub:"verified reviews",
+ b_faq:"FAQ & SECURITY", b_faq_sub:"how it works · protocols · timing",
+ sec_line:"ENCRYPTED CONNECTION · END-TO-END",
+ legal_privacy:"PRIVACY POLICY", legal_terms:"TERMS & CONDITIONS", legal_cookies:"COOKIE POLICY",
+ footer_status:"ENCRYPTED CONNECTION // SECURE CHANNEL // V2.4.1",
+ tg_title:"DO YOU HAVE TELEGRAM?", tg_sub:"The whole circle runs on Telegram: orders, tracking and support.",
+ tg_yes:"YES, I HAVE TELEGRAM", tg_no:"NO, I DON'T HAVE TELEGRAM",
+ tg_hint:"Install it from the store, then come back and tap YES.", back:"← BACK",
+ contact_title:"CONTACT ME", contact_desc:"Message me directly on Telegram: fast reply, private channel.", open_tg:"OPEN TELEGRAM",
+ bank_title:"CHOOSE THE DENOMINATION", bank_desc:"Select the banknote denomination.",
+ den_10:"€10", den_20:"€20", den_50:"€50", den_misto:"MIXED", den_misto_sub:"mixed denominations",
+ list_title:"Banknote price list —", list_sub:"Choose the quantity. Total price is already calculated.",
+ per_piece:"per piece", pieces:"pieces",
+ choice_title:"WHAT DO YOU WANT TO DO?", choice_order:"COMPLETE ORDER NOW", choice_cart:"ADD TO CART",
+ added:"Added to cart",
+ trans_title:"PAYPAL TOP-UP",
+ trans_intro:"What is a PayPal top-up?\n\nWe load your PayPal account balance via Friends & Family. You receive the agreed balance within 1-4 hours, with no visible fees and immediately withdrawable.\n\nProceed?",
+ trans_yes:"YES, GOT IT", trans_no:"NO, I'D RATHER NOT",
+ trans_list_title:"CHOOSE YOUR TOP-UP", trans_balance:"Balance",
+ pp_title:"VERIFY PAYPAL EMAIL", pp_sub:"Enter your PayPal email or username. Twice, for safety.",
+ pp_email:"PayPal Email / Username", pp_email2:"Repeat Email / Username",
+ pp_btn:"VERIFY & PROCEED", pp_verifying:"Searching linked account...", pp_mismatch:"The two emails don't match.",
+ feed_title:"TO SEE THE REVIEWS YOU NEED TELEGRAM!", feed_btn:"YES, I ALREADY HAVE TELEGRAM",
+ faq_title:"FAQ & SECURITY", faq_sub:"Tap a question to reveal the answer.",
+ faq:[["SECURE CONNECTION","End-to-end encryption active // No logs stored"],
+      ["HOW DOES SHIPPING WORK?","All parcels are shipped stealth with anonymous packaging. The outer box shows no reference to the content. We use reliable couriers and provide tracking on Telegram. Average times: EU 48-72h, Extra-EU 5-7 days."],
+      ["DO YOU ACCEPT ANONYMOUS PAYMENTS?","Yes. We accept Cryptocurrencies. Crypto payments are the fastest and guarantee total anonymity."],
+      ["HOW DOES THE PAYPAL TOP-UP WORK?","After payment, funds are transferred to your PayPal within 1-4 hours via Friends & Family. No visible fees and the balance is immediately available and withdrawable."],
+      ["IS MY DATA SAFE?","We store no personal data. Telegram conversations are encrypted and logs are automatically deleted every 24 hours. We never ask for documents or ID."],
+      ["SECURITY PROTOCOLS","✓ End-to-end encrypted communications\n✓ No personal data retention\n✓ Anonymous crypto transactions\n✓ Offshore servers in safe jurisdictions"]],
+ co_title:"WHERE DO WE SHIP?", co_sub:"Fill in your details. They will be attached automatically to your Telegram order.",
+ f_address:"Home address", f_civic:"House number", f_cap:"Postal code", f_email:"Email",
+ f_prefix:"Prefix", f_phone:"Mobile", f_ship:"Shipping line", f_locker:"InPost locker street",
+ co_note:"FREE shipping. After dispatch we always send the tracking code.",
+ co_btn:"CONTINUE TO PAYMENT", co_err:"Please fill in all required fields.",
+ pay_header:"END-TO-END PROTECTION · ENCRYPTION ACTIVE", pay_title:"AVAILABLE PAYMENT METHODS",
+ pay_sub:"We only accept these methods.",
+ pay_crypto:"CRYPTO", pay_crypto_note:"the only anonymous payment, made directly on the site",
+ pay_bonifico:"INSTANT BANK TRANSFER", pay_bonifico_note:"completed on Telegram",
+ pay_amazon:"AMAZON VOUCHERS", pay_amazon_note:"pay with an Amazon voucher",
+ cr_q:"DO YOU ALREADY HAVE A CRYPTO WALLET?", cr_yes:"YES, I HAVE A CRYPTO WALLET", cr_no:"NO, I DON'T HAVE A WALLET",
+ cr_guide:"No problem: create a free wallet on an exchange (e.g. Binance or Coinbase), buy the chosen crypto and come back here.",
+ cr_confirm:"CONFIRM ORDER", cr_choose:"Choose the crypto to send.",
+ cr_send:"Send exactly to this address:", copy:"COPY ADDRESS", copied:"Copied!",
+ wait_ex:"Waiting for confirmation from the exchange", wait_bc:"Waiting for blockchain confirmation",
+ cr_done:"ORDER COMPLETED", proc_title:"WE ARE PROCESSING YOUR ORDER",
+ proc_sub:"For the tracking code or any info, contact me.",
+ proc_contact:"OPEN TELEGRAM",
+ proc_fail:"PAYMENT NOT RECEIVED · ORDER NOT YET ACCEPTED. Go back to complete the order.",
+ bon_title:"INSTANT BANK TRANSFER", bon_desc:"To complete this payment method you need TELEGRAM.",
+ am_q:"DO YOU ALREADY HAVE AN AMAZON VOUCHER?", am_yes:"YES, I HAVE ONE", am_no:"NO, I DON'T",
+ am_code_title:"ENTER THE VOUCHER CODE", am_code_ph:"Amazon voucher code",
+ am_send:"SEND ON TELEGRAM", am_photo_lbl:"VOUCHER EXAMPLE",
+ cart_title:"CART", cart_empty:"Your cart is empty.", cart_total:"TOTAL", cart_checkout:"PROCEED TO CHECKOUT", remove:"Remove",
+ legal:{
+  privacy:["PRIVACY POLICY","Last updated: April 2026. Data processing compliant with current law, advanced encryption and no third-party sharing.",
+   ["1. DATA COLLECTION","GustavoEuro collects only the data strictly necessary to provide the requested services.\nData collected:\n- Contact data voluntarily provided\n- Technical browsing data (IP, browser, device)\n- Essential technical cookies"],
+   ["2. PURPOSES","Data is used exclusively for:\n* Handling contact requests\n* Improving user experience\n* Legal obligations\n* Platform security"],
+   ["3. RETENTION & SECURITY","Data is kept only as long as necessary and protected by advanced encryption. All data is securely deleted afterwards."],
+   ["4. USER RIGHTS","You may access, rectify or delete your data and object to processing at any time by contacting the operator."],
+   ["5. DATA TRANSFER","GustavoEuro does not transfer, sell or share personal data with third parties, except where required by law."]],
+  terms:["TERMS & CONDITIONS","Last updated: April 2026. Terms of use, liability and operating rules of the circle.",
+   ["1. ACCEPTANCE","Using GustavoEuro implies full acceptance of these Terms. If you disagree, do not use the service."],
+   ["2. SERVICE DESCRIPTION","GustavoEuro is an informational platform giving access to digital content, provided for informational and entertainment purposes."],
+   ["3. USER CONDUCT","You agree to:\n* Not use the service for illegal purposes\n* Not compromise platform security\n* Not share confidential info with third parties\n* Respect intellectual property"],
+   ["4. LIMITATION OF LIABILITY","GustavoEuro is not liable for direct or indirect damages from use or inability to use the service. Content is provided \"as is\"."],
+   ["5. CHANGES","GustavoEuro may modify these terms at any time; changes are effective upon publication."]],
+  cookies:["COOKIE POLICY","Last updated: October 2026. We only use essential technical cookies.",
+   ["1. WHAT ARE COOKIES","Cookies are small text files stored on your device. GustavoEuro only uses essential technical cookies."],
+   ["2. COOKIES USED","Session cookies, security cookies, preference cookies. No profiling or advertising cookies."],
+   ["3. MANAGEMENT","You can manage them in your browser settings; disabling them may affect the platform."],
+   ["4. THIRD-PARTY COOKIES","None."],
+   ["5. DURATION","Session or up to 24 hours."],
+   ["6. UPDATES","This policy may be updated periodically."]]
+ }
+},
+es:{
+ brand_sub:"CÍRCULO OPERATIVO PRIVADO",
+ gate_tag:"ACCESO RESTRINGIDO",
+ gate_title:"INTRODUCE TU CÓDIGO DE INVITACIÓN",
+ gate_sub:"El círculo es solo por invitación. Introduce el código para desbloquear todos los productos.",
+ gate_ph:"Código de acceso", gate_btn:"DESBLOQUEAR ACCESO",
+ gate_err:"Código no válido. Inténtalo de nuevo.", gate_hint:"Código demo: GUSTAVOEURO",
+ enc_title:"ACCESO CIFRADO", enc_secure:"CIFRADO EXTREMO A EXTREMO",
+ enc_ok:"ACCESO CONCEDIDO",
+ rot1:["CONEXIÓN CIFRADA","CANAL SEGURO","HANDSHAKE EN CURSO"],
+ rot2:["HANDSHAKE EXTREMO A EXTREMO","VERIFICACIÓN DE IDENTIDAD","CANAL SEGURO ACTIVO","CIFRADO EXTREMO A EXTREMO","TÚNEL OFFSHORE"],
+ w1:"BIENVENIDO.",
+ w2:"UN CÍRCULO OPERATIVO PRIVADO, ACCESIBLE SOLO POR INVITACIÓN.",
+ w3:"SOLO DAMOS RESULTADOS A QUIEN YA SABE QUÉ PEDIR.",
+ w4:"NO ESTAMOS AQUÍ PARA JUGAR: SOLO PERSONAS SERIAS CON GANAS DE CAMBIAR SU VIDA.",
+ b_contact:"CONTÁCTAME", b_contact_sub:"escríbeme directamente en Telegram",
+ b_bank:"BILLETES", b_bank_sub:"efectivo · cortes 10 / 20 / 50 / mixto",
+ b_trans:"RECARGA PAYPAL", b_trans_sub:"recarga el saldo de tu PayPal",
+ b_feed:"OPINIONES", b_feed_sub:"reseñas verificadas",
+ b_faq:"FAQ Y SEGURIDAD", b_faq_sub:"cómo funciona · protocolos · tiempos",
+ sec_line:"CONEXIÓN CIFRADA · EXTREMO A EXTREMO",
+ legal_privacy:"POLÍTICA DE PRIVACIDAD", legal_terms:"TÉRMINOS Y CONDICIONES", legal_cookies:"POLÍTICA DE COOKIES",
+ footer_status:"CONEXIÓN CIFRADA // CANAL SEGURO // V2.4.1",
+ tg_title:"¿TIENES TELEGRAM?", tg_sub:"Todo el círculo funciona en Telegram: pedidos, seguimiento y soporte.",
+ tg_yes:"SÍ, TENGO TELEGRAM", tg_no:"NO, NO TENGO TELEGRAM",
+ tg_hint:"Instálalo desde la tienda, vuelve aquí y pulsa SÍ.", back:"← VOLVER",
+ contact_title:"CONTÁCTAME", contact_desc:"Escríbeme directamente en Telegram: respuesta rápida, canal privado.", open_tg:"ABRIR TELEGRAM",
+ bank_title:"ELIGE EL CORTE", bank_desc:"Selecciona el corte de los billetes.",
+ den_10:"10 €", den_20:"20 €", den_50:"50 €", den_misto:"MIXTO", den_misto_sub:"cortes mixtos",
+ list_title:"Lista de precios billetes de", list_sub:"Elige la cantidad. El precio total ya está calculado.",
+ per_piece:"por unidad", pieces:"unidades",
+ choice_title:"¿QUÉ QUIERES HACER?", choice_order:"COMPLETAR PEDIDO YA", choice_cart:"AÑADIR AL CARRITO",
+ added:"Añadido al carrito",
+ trans_title:"RECARGA PAYPAL",
+ trans_intro:"¿Qué es la recarga de PayPal?\n\nCargamos el saldo de tu cuenta PayPal mediante método Amigos y Familiares. Recibes el saldo acordado en 1-4 horas, sin comisiones visibles y disponible al instante.\n\n¿Continuar?",
+ trans_yes:"SÍ, ENTENDIDO", trans_no:"NO, PREFIERO NO HACERLO",
+ trans_list_title:"ELIGE LA RECARGA", trans_balance:"Saldo",
+ pp_title:"VERIFICAR EMAIL PAYPAL", pp_sub:"Introduce el email o usuario de tu PayPal. Dos veces, por seguridad.",
+ pp_email:"Email / Usuario PayPal", pp_email2:"Repite email / Usuario",
+ pp_btn:"VERIFICAR Y CONTINUAR", pp_verifying:"Buscando cuenta vinculada...", pp_mismatch:"Los dos emails no coinciden.",
+ feed_title:"¡PARA VER LAS RESEÑAS NECESITAS TELEGRAM!", feed_btn:"SÍ, YA TENGO TELEGRAM",
+ faq_title:"FAQ Y SEGURIDAD", faq_sub:"Toca una pregunta para ver la respuesta.",
+ faq:[["CONEXIÓN SEGURA","Cifrado extremo a extremo activo // Sin registros guardados"],
+      ["¿CÓMO FUNCIONA EL ENVÍO?","Todos los paquetes se envían en modo stealth con embalaje anónimo. La caja exterior no muestra referencia al contenido. Usamos mensajeros fiables y damos tracking en Telegram. Tiempos medios: UE 48-72h, Extra-UE 5-7 días."],
+      ["¿ACEPTÁIS PAGOS ANÓNIMOS?","Sí. Aceptamos Criptomonedas. Los pagos crypto son los más rápidos y garantizan anonimato total."],
+      ["¿CÓMO FUNCIONA LA RECARGA PAYPAL?","Tras el pago, los fondos se transfieren a tu PayPal en 1-4 horas vía Amigos y Familiares. Sin comisiones visibles y el saldo es disponible al instante."],
+      ["¿MIS DATOS ESTÁN SEGUROS?","No guardamos datos personales. Las conversaciones de Telegram están cifradas y los registros se borran cada 24 horas."],
+      ["PROTOCOLOS DE SEGURIDAD","✓ Comunicaciones cifradas extremo a extremo\n✓ Sin retención de datos personales\n✓ Transacciones anónimas con crypto\n✓ Servidores offshore en jurisdicciones seguras"]],
+ co_title:"¿DÓNDE ENVIAMOS EL PAQUETE?", co_sub:"Rellena tus datos. Se adjuntarán automáticamente a tu pedido en Telegram.",
+ f_address:"Dirección", f_civic:"Número", f_cap:"Código postal", f_email:"Email",
+ f_prefix:"Prefijo", f_phone:"Móvil", f_ship:"Línea de envío", f_locker:"Calle del locker InPost",
+ co_note:"Envío GRATUITO. Tras el envío siempre mandamos el código de seguimiento.",
+ co_btn:"CONTINUAR AL PAGO", co_err:"Rellena todos los campos obligatorios.",
+ pay_header:"PROTECCIÓN EXTREMO A EXTREMO · CIFRADO ACTIVO", pay_title:"MÉTODOS DE PAGO DISPONIBLES",
+ pay_sub:"Solo aceptamos estos métodos.",
+ pay_crypto:"CRYPTO", pay_crypto_note:"el único pago anónimo, directamente en el sitio",
+ pay_bonifico:"TRANSFERENCIA INSTANTÁNEA", pay_bonifico_note:"se completa en Telegram",
+ pay_amazon:"CHEQUES AMAZON", pay_amazon_note:"paga con un cheque Amazon",
+ cr_q:"¿YA TIENES UNA CARTERA CRYPTO?", cr_yes:"SÍ, YA TENGO UNA CARTERA CRYPTO", cr_no:"NO, NO TENGO CARTERA",
+ cr_guide:"Sin problema: crea una cartera gratis en un exchange (ej. Binance o Coinbase), compra la crypto elegida y vuelve aquí.",
+ cr_confirm:"CONFIRMAR PEDIDO", cr_choose:"Elige la crypto a enviar.",
+ cr_send:"Envía exactamente a esta dirección:", copy:"COPIAR DIRECCIÓN", copied:"¡Copiado!",
+ wait_ex:"Esperando confirmación del exchange", wait_bc:"Esperando confirmación de la blockchain",
+ cr_done:"PEDIDO COMPLETADO", proc_title:"ESTAMOS PROCESANDO TU PEDIDO",
+ proc_sub:"Para el código de seguimiento o información, contáctame.",
+ proc_contact:"ABRIR TELEGRAM",
+ proc_fail:"PAGO NO RECIBIDO · PEDIDO AÚN NO ACEPTADO. Vuelve atrás para completar el pedido.",
+ bon_title:"TRANSFERENCIA INSTANTÁNEA", bon_desc:"Para completar este pago necesitas TELEGRAM.",
+ am_q:"¿YA TIENES UN CHEQUE AMAZON?", am_yes:"SÍ, LO TENGO", am_no:"NO, NO LO TENGO",
+ am_code_title:"INTRODUCE EL CÓDIGO DEL CHEQUE", am_code_ph:"Código del cheque Amazon",
+ am_send:"ENVIAR POR TELEGRAM", am_photo_lbl:"EJEMPLO DE CHEQUE",
+ cart_title:"CARRITO", cart_empty:"El carrito está vacío.", cart_total:"TOTAL", cart_checkout:"IR AL CHECKOUT", remove:"Eliminar",
+ legal:{
+  privacy:["POLÍTICA DE PRIVACIDAD","Última actualización: Abril 2026. Tratamiento conforme a la ley, cifrado avanzado y sin compartir con terceros.",
+   ["1. RECOGIDA DE DATOS","GustavoEuro recoge solo los datos necesarios para prestar los servicios solicitados.\n- Datos de contacto\n- Datos técnicos de navegación\n- Cookies técnicas esenciales"],
+   ["2. FINALIDADES","Gestión de contactos, mejora de la experiencia, obligaciones legales y seguridad de la plataforma."],
+   ["3. CONSERVACIÓN Y SEGURIDAD","Los datos se conservan el tiempo necesario y se protegen con cifrado avanzado."],
+   ["4. DERECHOS","Acceso, rectificación, supresión y oposición contactando al operador."],
+   ["5. TRANSFERENCIA","GustavoEuro no transfiere ni vende datos personales a terceros, salvo obligación legal."]],
+  terms:["TÉRMINOS Y CONDICIONES","Última actualización: Abril 2026. Condiciones de uso, responsabilidad y reglas operativas.",
+   ["1. ACEPTACIÓN","El uso de GustavoEuro implica la aceptación total de estos Términos."],
+   ["2. DESCRIPCIÓN DEL SERVICIO","Plataforma informativa que da acceso a contenidos digitales con fines informativos y de entretenimiento."],
+   ["3. CONDUCTA","No usar el servicio con fines ilegales, no comprometer la seguridad, no compartir información confidencial, respetar la propiedad intelectual."],
+   ["4. LIMITACIÓN DE RESPONSABILIDAD","GustavoEuro no es responsable de daños directos o indirectos. Contenidos \"tal cual\"."],
+   ["5. CAMBIOS","GustavoEuro puede modificar los términos en cualquier momento."]],
+  cookies:["POLÍTICA DE COOKIES","Última actualización: octubre 2026. Solo usamos cookies técnicas esenciales.",
+   ["1. QUÉ SON LAS COOKIES","Pequeños archivos de texto guardados en tu dispositivo. Solo usamos cookies técnicas esenciales."],
+   ["2. TIPOS","Cookies de sesión, seguridad y preferencias. Sin cookies de perfilado o publicidad."],
+   ["3. GESTIÓN","Se gestionan desde el navegador; desactivarlas puede afectar a la plataforma."],
+   ["4. TERCEROS","Ninguna."],
+   ["5. DURACIÓN","Sesión o máximo 24 horas."],
+   ["6. ACTUALIZACIONES","Esta política puede actualizarse periódicamente."]]
+ }
+},
+fr:{
+ brand_sub:"CERCLE OPÉRATIONNEL PRIVÉ",
+ gate_tag:"ACCÈS RESTREINT",
+ gate_title:"ENTREZ VOTRE CODE D'INVITATION",
+ gate_sub:"Le cercle est sur invitation. Entrez le code pour débloquer tous les produits.",
+ gate_ph:"Code d'accès", gate_btn:"DÉBLOQUER L'ACCÈS",
+ gate_err:"Code invalide. Réessayez.", gate_hint:"Code démo : GUSTAVOEURO",
+ enc_title:"ACCÈS CHIFFRÉ", enc_secure:"CHIFFREMENT DE BOUT EN BOUT",
+ enc_ok:"ACCÈS ACCORDÉ",
+ rot1:["CONNEXION CHIFFRÉE","CANAL SÉCURISÉ","HANDSHAKE EN COURS"],
+ rot2:["HANDSHAKE DE BOUT EN BOUT","VÉRIFICATION D'IDENTITÉ","CANAL SÉCURISÉ ACTIF","CHIFFREMENT DE BOUT EN BOUT","TUNNEL OFFSHORE"],
+ w1:"BIENVENUE.",
+ w2:"UN CERCLE OPÉRATIONNEL PRIVÉ, ACCESSIBLE UNIQUEMENT SUR INVITATION.",
+ w3:"NOUS NE DONNONS DES RÉSULTATS QU'À CEUX QUI SAVENT DÉJÀ QUOI DEMANDER.",
+ w4:"ON N'EST PAS LÀ POUR JOUER — SEULEMENT DES PERSONNES SÉRIEUSES PRÊTES À CHANGER DE VIE !",
+ b_contact:"CONTACTEZ-MOI", b_contact_sub:"écrivez-moi directement sur Telegram",
+ b_bank:"BILLETS", b_bank_sub:"espèces · coupures 10 / 20 / 50 / mixte",
+ b_trans:"RECHARGE PAYPAL", b_trans_sub:"rechargez votre solde PayPal",
+ b_feed:"AVIS", b_feed_sub:"avis vérifiés",
+ b_faq:"FAQ & SÉCURITÉ", b_faq_sub:"fonctionnement · protocoles · délais",
+ sec_line:"CONNEXION CHIFFRÉE · DE BOUT EN BOUT",
+ legal_privacy:"POLITIQUE DE CONFIDENTIALITÉ", legal_terms:"CONDITIONS GÉNÉRALES", legal_cookies:"POLITIQUE COOKIES",
+ footer_status:"CONNEXION CHIFFRÉE // CANAL SÉCURISÉ // V2.4.1",
+ tg_title:"AVEZ-VOUS TELEGRAM ?", tg_sub:"Tout le cercle passe par Telegram : commandes, suivi et support.",
+ tg_yes:"OUI, J'AI TELEGRAM", tg_no:"NON, PAS DE TELEGRAM",
+ tg_hint:"Installez-le depuis le store, revenez ici et appuyez sur OUI.", back:"← RETOUR",
+ contact_title:"CONTACTEZ-MOI", contact_desc:"Écrivez-moi directement sur Telegram : réponse rapide, canal privé.", open_tg:"OUVRIR TELEGRAM",
+ bank_title:"CHOISISSEZ LA COUPURE", bank_desc:"Sélectionnez la coupure des billets.",
+ den_10:"10 €", den_20:"20 €", den_50:"50 €", den_misto:"MIXTE", den_misto_sub:"coupures mixtes",
+ list_title:"Liste de prix billets de", list_sub:"Choisissez la quantité. Le prix total est déjà calculé.",
+ per_piece:"à l'unité", pieces:"pièces",
+ choice_title:"QUE VOULEZ-VOUS FAIRE ?", choice_order:"COMMANDER MAINTENANT", choice_cart:"AJOUTER AU PANIER",
+ added:"Ajouté au panier",
+ trans_title:"RECHARGE PAYPAL",
+ trans_intro:"Qu'est-ce qu'une recharge PayPal ?\n\nNous créditons votre compte PayPal via la méthode Amis et Famille. Vous recevez le solde convenu en 1-4 heures, sans frais visibles et immédiatement retirable.\n\nContinuer ?",
+ trans_yes:"OUI, COMPRIS", trans_no:"NON, JE PRÉFÈRE PAS",
+ trans_list_title:"CHOISISSEZ LA RECHARGE", trans_balance:"Solde",
+ pp_title:"VÉRIFIER L'EMAIL PAYPAL", pp_sub:"Entrez votre email ou identifiant PayPal. Deux fois, par sécurité.",
+ pp_email:"Email / Identifiant PayPal", pp_email2:"Répétez email / Identifiant",
+ pp_btn:"VÉRIFIER ET CONTINUER", pp_verifying:"Recherche du compte lié...", pp_mismatch:"Les deux emails ne correspondent pas.",
+ feed_title:"POUR VOIR LES AVIS, IL FAUT TELEGRAM !", feed_btn:"OUI, J'AI DÉJÀ TELEGRAM",
+ faq_title:"FAQ & SÉCURITÉ", faq_sub:"Touchez une question pour voir la réponse.",
+ faq:[["CONNEXION SÉCURISÉE","Chiffrement de bout en bout actif // Aucun log conservé"],
+      ["COMMENT FONCTIONNE L'EXPÉDITION ?","Tous les colis sont expédiés en mode stealth avec un emballage anonyme. L'extérieur ne mentionne aucun contenu. Nous utilisons des transporteurs fiables et fournissons le tracking sur Telegram. Délais moyens : UE 48-72h, hors UE 5-7 jours."],
+      ["ACCEPTEZ-VOUS LES PAIEMENTS ANONYMES ?","Oui. Nous acceptons les cryptomonnaies. Les paiements crypto sont les plus rapides et garantissent un anonymat total."],
+      ["COMMENT FONCTIONNE LA RECHARGE PAYPAL ?","Après paiement, les fonds sont transférés sur votre PayPal en 1-4 heures via Amis et Famille. Sans frais visibles et solde immédiatement disponible."],
+      ["MES DONNÉES SONT-ELLES SÛRES ?","Nous ne conservons aucune donnée personnelle. Les conversations Telegram sont chiffrées et les logs sont supprimés toutes les 24 heures."],
+      ["PROTOCOLES DE SÉCURITÉ","✓ Communications chiffrées de bout en bout\n✓ Aucune conservation de données personnelles\n✓ Transactions anonymes en crypto\n✓ Serveurs offshore en juridictions sûres"]],
+ co_title:"OÙ EXPÉDIONS-NOUS ?", co_sub:"Remplissez vos données. Elles seront jointes automatiquement à votre commande Telegram.",
+ f_address:"Adresse", f_civic:"Numéro", f_cap:"Code postal", f_email:"Email",
+ f_prefix:"Indicatif", f_phone:"Mobile", f_ship:"Ligne d'expédition", f_locker:"Rue du locker InPost",
+ co_note:"Livraison GRATUITE. Après expédition, nous envoyons toujours le code de suivi.",
+ co_btn:"CONTINUER VERS LE PAIEMENT", co_err:"Remplissez tous les champs obligatoires.",
+ pay_header:"PROTECTION DE BOUT EN BOUT · CHIFFREMENT ACTIF", pay_title:"MOYENS DE PAIEMENT DISPONIBLES",
+ pay_sub:"Nous n'acceptons que ces moyens.",
+ pay_crypto:"CRYPTO", pay_crypto_note:"le seul paiement anonyme, directement sur le site",
+ pay_bonifico:"VIREMENT INSTANTANÉ", pay_bonifico_note:"finalisé sur Telegram",
+ pay_amazon:"BONS AMAZON", pay_amazon_note:"payez avec un bon Amazon",
+ cr_q:"AVEZ-VOUS DÉJÀ UN PORTEFEUILLE CRYPTO ?", cr_yes:"OUI, J'AI DÉJÀ UN WALLET CRYPTO", cr_no:"NON, PAS DE WALLET",
+ cr_guide:"Pas de souci : créez un wallet gratuit sur un exchange (ex. Binance ou Coinbase), achetez la crypto choisie et revenez ici.",
+ cr_confirm:"CONFIRMER LA COMMANDE", cr_choose:"Choisissez la crypto à envoyer.",
+ cr_send:"Envoyez exactement à cette adresse :", copy:"COPIER L'ADRESSE", copied:"Copié !",
+ wait_ex:"En attente de confirmation de l'exchange", wait_bc:"En attente de confirmation de la blockchain",
+ cr_done:"COMMANDE TERMINÉE", proc_title:"NOUS TRAITONS VOTRE COMMANDE",
+ proc_sub:"Pour le code de suivi ou toute info, contactez-moi.",
+ proc_contact:"OUVRIR TELEGRAM",
+ proc_fail:"PAIEMENT NON REÇU · COMMANDE NON ENCORE PRISE EN CHARGE. Revenez en arrière pour finaliser.",
+ bon_title:"VIREMENT INSTANTANÉ", bon_desc:"Pour ce moyen de paiement, il faut TELEGRAM.",
+ am_q:"AVEZ-VOUS DÉJÀ UN BON AMAZON ?", am_yes:"OUI, J'EN AI UN", am_no:"NON, PAS DU TOUT",
+ am_code_title:"ENTREZ LE CODE DU BON", am_code_ph:"Code du bon Amazon",
+ am_send:"ENVOYER SUR TELEGRAM", am_photo_lbl:"EXEMPLE DE BON",
+ cart_title:"PANIER", cart_empty:"Votre panier est vide.", cart_total:"TOTAL", cart_checkout:"PASSER À LA CAISSE", remove:"Retirer",
+ legal:{
+  privacy:["POLITIQUE DE CONFIDENTIALITÉ","Dernière mise à jour : avril 2026. Traitement conforme à la loi, chiffrement avancé et aucun partage avec des tiers.",
+   ["1. COLLECTE DES DONNÉES","GustavoEuro collecte uniquement les données nécessaires.\n- Données de contact\n- Données techniques de navigation\n- Cookies techniques essentiels"],
+   ["2. FINALITÉS","Gestion des contacts, amélioration de l'expérience, obligations légales et sécurité."],
+   ["3. CONSERVATION ET SÉCURITÉ","Conservées le temps nécessaire et protégées par un chiffrement avancé."],
+   ["4. DROITS","Accès, rectification, suppression et opposition en contactant l'opérateur."],
+   ["5. TRANSFERT","Aucun transfert, vente ou partage avec des tiers, sauf obligation légale."]],
+  terms:["CONDITIONS GÉNÉRALES","Dernière mise à jour : avril 2026. Conditions d'utilisation, responsabilité et règles du cercle.",
+   ["1. ACCEPTATION","L'utilisation de GustavoEuro implique l'acceptation totale des présentes conditions."],
+   ["2. DESCRIPTION","Plateforme informative donnant accès à des contenus numériques à but informatif et de divertissement."],
+   ["3. CONDUITE","Ne pas utiliser à des fins illégales, ne pas compromettre la sécurité, ne pas partager d'infos confidentielles, respecter la propriété intellectuelle."],
+   ["4. RESPONSABILITÉ","GustavoEuro n'est pas responsable des dommages directs ou indirects. Contenus fournis \"tels quels\"."],
+   ["5. MODIFICATIONS","GustavoEuro peut modifier les conditions à tout moment."]],
+  cookies:["POLITIQUE COOKIES","Dernière mise à jour : octobre 2026. Uniquement des cookies techniques essentiels.",
+   ["1. LES COOKIES","Petits fichiers texte stockés sur votre appareil. Uniquement des cookies techniques essentiels."],
+   ["2. TYPES","Cookies de session, de sécurité et de préférences. Aucun cookie de profilage."],
+   ["3. GESTION","Gérables depuis le navigateur ; les désactiver peut affecter la plateforme."],
+   ["4. TIERS","Aucun."],
+   ["5. DURÉE","Session ou 24 heures maximum."],
+   ["6. MISES À JOUR","Cette politique peut être mise à jour périodiquement."]]
+ }
+}
+};
+
+/* ---------------- STATE ---------------- */
+const state = {
+  lang: localStorage.getItem('ge_lang') || (navigator.language||'it').slice(0,2),
+  unlocked: localStorage.getItem('ge_unlocked')==='1',
+  cart: JSON.parse(localStorage.getItem('ge_cart')||'[]'),
+  ship: JSON.parse(localStorage.getItem('ge_ship')||'null'),
+  pending: null, den:null, coin:null, tgCtx:null, tgCb:null, view:'home', procTimer:null
+};
+if(!I18N[state.lang]) state.lang='it';
+
+const t = k => I18N[state.lang][k];
+function fmt(n){
+  const dec = Number.isInteger(n)?0:2;
+  try{ return new Intl.NumberFormat(state.lang,{style:'currency',currency:'EUR',minimumFractionDigits:dec,maximumFractionDigits:2}).format(n); }
+  catch(e){ return n.toFixed(dec)+' €'; }
+}
+
+/* ---------------- ROUTER ---------------- */
+function go(v){
+  if(state.procTimer){ clearTimeout(state.procTimer); state.procTimer=null; }
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('v-'+v);
+  if(el) el.classList.add('active');
+  state.view = v;
+  const hideHdr = ['loader1','gate','loader2'].includes(v);
+  document.getElementById('hdr').classList.toggle('hide', hideHdr);
+  el && (el.scrollTop = 0);
+  window.scrollTo(0,0);
+  render();
+  if(v==='proc') startProc();
+}
+function render(){
+  if(state.view==='bank') renderDen();
+  if(state.view==='list') renderList();
+  if(state.view==='transList') renderTrans();
+  if(state.view==='faq') renderFAQ();
+  if(state.view==='cart') renderCart();
+  if(state.view==='crConfirm') renderCoins();
+  if(state.view==='privacy') renderLegal('privacy');
+  if(state.view==='terms') renderLegal('terms');
+  if(state.view==='cookies') renderLegal('cookies');
+  updateBadge();
+}
+function updateBadge(){
+  const b=document.getElementById('cartBadge');
+  b.style.display = state.cart.length? 'grid':'none';
+  b.textContent = state.cart.length;
+}
+
+/* ---------------- I18N APPLY ---------------- */
+function applyI18n(){
+  document.documentElement.lang = state.lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    const v = I18N[state.lang][k];
+    if(typeof v === 'string') el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const v = I18N[state.lang][el.getAttribute('data-i18n-ph')];
+    if(v) el.placeholder = v;
+  });
+  document.querySelectorAll('.lang').forEach(b=>b.classList.toggle('on', b.dataset.l===state.lang));
+  render();
+}
+function buildLangs(){
+  const box=document.getElementById('langs');
+  box.innerHTML='';
+  [['it','IT'],['es','ES'],['en','EN'],['fr','FR']].forEach(([c,l])=>{
+    const b=document.createElement('button');
+    b.className='lang'; b.dataset.l=c; b.textContent=l;
+    b.onclick=()=>{ state.lang=c; localStorage.setItem('ge_lang',c); applyI18n(); };
+    box.appendChild(b);
+  });
+}
+
+/* ---------------- RENDERERS ---------------- */
+function renderDen(){
+  const box=document.getElementById('denMenu'); box.innerHTML='';
+  [['10',t('den_10'),''],['20',t('den_20'),''],['50',t('den_50'),''],['misto',t('den_misto'),t('den_misto_sub')]].forEach(([k,lbl,sub])=>{
+    const d=document.createElement('div'); d.className='mitem';
+    d.innerHTML=`<div><div class="lbl">${lbl}</div>${sub?`<div class="sublbl">${sub}</div>`:''}</div><div class="arrow">→</div>`;
+    d.onclick=()=>{ state.den=k; go('list'); };
+    box.appendChild(d);
+  });
+}
+function renderList(){
+  document.getElementById('listTitle').textContent = t('list_title')+' '+t('den_'+state.den);
+  const box=document.getElementById('listRows'); box.innerHTML='';
+  (PRICES[state.den]||[]).forEach(it=>{
+    const tot = it.p*it.pp;
+    const d=document.createElement('div'); d.className='row';
+    d.innerHTML=`<div class="price">${fmt(tot)}</div>
+      <div class="desc"><b>${it.p} ${t('pieces')}</b><br>${it.pp.toString().replace('.',',')} € ${t('per_piece')}</div>`;
+    d.onclick=()=>openChoice({den:state.den, p:it.p, pp:it.pp, total:tot});
+    box.appendChild(d);
+  });
+}
+function openChoice(item){
+  state.pending=item;
+  const info=document.getElementById('choiceInfo');
+  info.innerHTML=`<div class="lbl" style="font-family:Sora;font-weight:700">${t('den_'+item.den)} · ${item.p} ${t('pieces')}</div>
+    <div class="sublbl" style="color:var(--dim);font-size:12px;margin-top:4px">${item.pp.toString().replace('.',',')} € ${t('per_piece')}</div>
+    <div class="price" style="color:var(--gold2);font-family:Sora;font-weight:800;font-size:22px;margin-top:10px">${fmt(item.total)}</div>`;
+  go('choice');
+}
+function choiceNow(){ state.cart=[state.pending]; saveCart(); askTelegram('checkout',()=>go('checkout')); }
+function choiceCart(){ state.cart.push(state.pending); saveCart(); toast(t('added')); go('home'); }
+function saveCart(){ localStorage.setItem('ge_cart', JSON.stringify(state.cart)); updateBadge(); }
+
+function renderTrans(){
+  const box=document.getElementById('transRows'); box.innerHTML='';
+  TRANSFERS.forEach(x=>{
+    const d=document.createElement('div'); d.className='row';
+    d.innerHTML=`<div class="price">€${x.pay}</div><div class="desc"><b>${t('trans_balance')} ${x.bal} €</b></div>`;
+    d.onclick=()=>{ state.pending={type:'trans',pay:x.pay,bal:x.bal,total:x.pay}; askTelegram('transVerify',()=>go('ppVerify')); };
+    box.appendChild(d);
+  });
+}
+function verifyPP(){
+  const a=document.getElementById('pp1').value.trim().toLowerCase();
+  const b=document.getElementById('pp2').value.trim().toLowerCase();
+  const err=document.getElementById('ppErr');
+  if(!a||a!==b){ err.classList.add('on'); return; }
+  err.classList.remove('on');
+  document.getElementById('ppSpin').style.display='block';
+  document.getElementById('ppBtn').style.display='none';
+  setTimeout(()=>{
+    document.getElementById('ppSpin').style.display='none';
+    document.getElementById('ppBtn').style.display='inline-flex';
+    go('pay');
+  },1600);
+}
+function renderFAQ(){
+  const box=document.getElementById('faqBox'); box.innerHTML='';
+  I18N[state.lang].faq.forEach(([q,a])=>{
+    const d=document.createElement('div'); d.className='acc';
+    d.innerHTML=`<h4>${q}<span>+</span></h4><div class="body"><p>${a}</p></div>`;
+    d.querySelector('h4').onclick=()=>d.classList.toggle('open');
+    box.appendChild(d);
+  });
+}
+function renderCoins(){
+  const box=document.getElementById('coinMenu'); box.innerHTML='';
+  Object.entries(CONFIG.COINS).forEach(([k,c])=>{
+    const d=document.createElement('div'); d.className='mitem';
+    d.innerHTML=`<div class="lbl">${c.name}</div><div class="arrow">→</div>`;
+    d.onclick=()=>openAddr(k);
+    box.appendChild(d);
+  });
+}
+function openAddr(k){
+  state.coin=k;
+  const c=CONFIG.COINS[k];
+  document.getElementById('coinName').textContent=c.name;
+  document.getElementById('coinAddr').textContent=c.addr;
+  document.getElementById('waitTxt').textContent=t(c.wait);
+  go('crAddr');
+}
+function copyAddr(){
+  const txt=document.getElementById('coinAddr').textContent;
+  navigator.clipboard?.writeText(txt);
+  toast(t('copied'));
+}
+function startProc(){
+  const box=document.getElementById('procBox');
+  box.classList.remove('fail');
+  document.getElementById('procTitle').textContent=t('proc_title');
+  document.getElementById('procSub').textContent=t('proc_sub');
+  state.procTimer=setTimeout(()=>{
+    box.classList.add('fail');
+    document.getElementById('procTitle').textContent=t('proc_fail');
+    document.getElementById('procSub').textContent='';
+  },6000);
+}
+function renderCart(){
+  const box=document.getElementById('cartBox'); const foot=document.getElementById('cartFoot');
+  box.innerHTML='';
+  if(!state.cart.length){ foot.style.display='none'; box.innerHTML=`<div class="sub">${t('cart_empty')}</div>`; return; }
+  foot.style.display='block';
+  let tot=0;
+  state.cart.forEach((it,i)=>{
+    tot += it.total;
+    const d=document.createElement('div'); d.className='row'; d.style.cursor='default';
+    const label = it.type==='trans' ? `${t('trans_title')} €${it.pay} → ${t('trans_balance')} ${it.bal} €`
+                                    : `${t('den_'+it.den)} · ${it.p} ${t('pieces')}`;
+    d.innerHTML=`<div><div style="font-weight:600">${label}</div>
+      <div style="font-size:12px;color:var(--dim2);margin-top:4px">${fmt(it.total)}</div></div>
+      <button class="btn sm" onclick="delItem(${i})">${t('remove')}</button>`;
+    box.appendChild(d);
+  });
+  document.getElementById('cartTotal').textContent=fmt(tot);
+}
+function delItem(i){ state.cart.splice(i,1); saveCart(); renderCart(); }
+
+function renderLegal(which){
+  const data = I18N[state.lang].legal[which];
+  const box = document.getElementById(which+'Box');
+  let html = `<button class="back" onclick="go('home')">${t('back')}</button>
+    <div class="title">${data[0]}</div><div class="upd">${data[1]}</div>`;
+  for(let i=2;i<data.length;i++){ html += `<h3>${data[i][0]}</h3><p>${data[i][1]}</p>`; }
+  html += `<footer><div class="fstatus">${t('footer_status')}</div></footer>`;
+  box.innerHTML=html;
+}
+
+/* ---------------- TELEGRAM ---------------- */
+function isIOS(){ return /iPad|iPhone|iPod/.test(navigator.userAgent); }
+function openTG(){ window.open(CONFIG.TG,'_blank'); }
+function openStore(){ window.open(isIOS()?CONFIG.STORE_IOS:CONFIG.STORE_ANDROID,'_blank'); }
+function openChannel(){ window.open(CONFIG.CHANNEL,'_blank'); }
+
+function askTelegram(ctx, cb){
+  state.tgCtx=ctx; state.tgCb=cb||null;
+  document.getElementById('tgHint').textContent='';
+  go('telegram');
+}
+function tgYes(){
+  if(state.tgCtx==='bonifico' || state.tgCtx==='amazon'){ openOrderTG(); }
+  else { openTG(); }
+  const cb=state.tgCb;
+  if(state.tgCtx==='feedback'){ /* channel opened via cb */ }
+  if(cb) setTimeout(cb,250);
+}
+function tgNo(){ openStore(); document.getElementById('tgHint').textContent=t('tg_hint'); }
+function tgBack(){
+  const map={contact:'contact',checkout:'home',transVerify:'transList',feedback:'feed',bonifico:'bon',amazon:'amQ'};
+  go(map[state.tgCtx]||'home');
+}
+function buildOrderMsg(extra){
+  const s=state.ship||{};
+  let m = "🟡 NUOVO ORDINE — GustavoEuro\n\n";
+  state.cart.forEach(it=>{
+    if(it.type==='trans') m += `• ${t('trans_title')} €${it.pay} → ${t('trans_balance')} ${it.bal} € — ${fmt(it.total)}\n`;
+    else m += `• ${t('den_'+it.den)} · ${it.p} ${t('pieces')} — ${fmt(it.total)}\n`;
+  });
+  m += "\n📦 SPEDIZIONE\n";
+  m += `Via: ${s.addr||'-'} n.${s.civ||'-'}\nCAP: ${s.cap||'-'}\n`;
+  m += `Email: ${s.mail||'-'}\nTel: ${s.pref||''} ${s.phone||'-'}\nCorriere: ${s.ship||'-'}`;
+  if(s.ship==='INPOST' && s.locker) m += ` (locker: ${s.locker})`;
+  if(extra) m += "\n\n"+extra;
+  return m;
+}
+function openOrderTG(extra){
+  const msg = encodeURIComponent(buildOrderMsg(extra));
+  window.open(CONFIG.TG+"?text="+msg,'_blank');
+}
+function sendAmazon(){
+  const code=document.getElementById('amCode').value.trim();
+  openOrderTG("🎁 BUONO AMAZON\nCodice: "+(code||'-'));
+  go('proc');
+}
+
+/* ---------------- CHECKOUT ---------------- */
+function fillPrefixes(){
+  const sel=document.getElementById('f_pref');
+  const list=[["+39","🇮🇹 IT +39"],["+34","🇪🇸 ES +34"],["+44","🇬🇧 UK +44"],["+33","🇫🇷 FR +33"],
+    ["+49","🇩🇪 DE +49"],["+1","🇺🇸 US +1"],["+41","🇨🇭 CH +41"],["+43","🇦🇹 AT +43"],["+32","🇧🇪 BE +32"],
+    ["+31","🇳🇱 NL +31"],["+351","🇵🇹 PT +351"],["+353","🇮🇪 IE +353"],["+30","🇬🇷 GR +30"],["+48","🇵🇱 PL +48"],
+    ["+40","🇷🇴 RO +40"],["+36","🇭🇺 HU +36"],["+420","🇨🇿 CZ +420"],["+46","🇸🇪 SE +46"],["+47","🇳🇴 NO +47"],["+45","🇩🇰 DK +45"]];
+  sel.innerHTML = list.map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+}
+document.getElementById('f_ship').addEventListener('change',e=>{
+  document.getElementById('lockerField').style.display = e.target.value==='INPOST'?'block':'none';
+});
+function submitCheckout(){
+  const g=id=>document.getElementById(id).value.trim();
+  const data={addr:g('f_addr'),civ:g('f_civ'),cap:g('f_cap'),mail:g('f_mail'),
+    pref:document.getElementById('f_pref').value,phone:g('f_phone'),
+    ship:document.getElementById('f_ship').value,locker:g('f_locker')};
+  const err=document.getElementById('coErr');
+  const ok = data.addr&&data.civ&&data.cap&&data.mail&&data.phone&&data.ship && (data.ship!=='INPOST'||data.locker);
+  if(!ok){ err.classList.add('on'); return; }
+  err.classList.remove('on');
+  state.ship=data; localStorage.setItem('ge_ship',JSON.stringify(data));
+  go('pay');
+}
+function restoreCheckout(){
+  const s=state.ship; if(!s) return;
+  const set=(id,v)=>{const e=document.getElementById(id); if(e) e.value=v||'';};
+  set('f_addr',s.addr); set('f_civ',s.civ); set('f_cap',s.cap); set('f_mail',s.mail);
+  set('f_phone',s.phone); set('f_locker',s.locker);
+  if(s.pref) document.getElementById('f_pref').value=s.pref;
+  if(s.ship){ document.getElementById('f_ship').value=s.ship;
+    document.getElementById('lockerField').style.display = s.ship==='INPOST'?'block':'none'; }
+}
+
+/* ---------------- MISC ---------------- */
+let toastT;
+function toast(msg){
+  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'),2200);
+}
+function showGuide(){ document.getElementById('crGuide').style.display='block'; }
+
+/* ---------------- LOADERS ---------------- */
+function rotate(el, words, ms){
+  let i=0;
+  const upd=()=>{ el.textContent=words[i%words.length]; el.classList.remove('spinword'); void el.offsetWidth; el.classList.add('spinword'); i++; };
+  upd(); return setInterval(upd, ms);
+}
+function runBar(bar, numEl, dur, done){
+  const start=performance.now();
+  let rot;
+  if(numEl) rot = rotate(document.getElementById('rot2'), I18N[state.lang].rot2, 650);
+  else rot = rotate(document.getElementById('rot1'), I18N[state.lang].rot1, 750);
+  function step(now){
+    const p=Math.min(1,(now-start)/dur);
+    bar.style.width=(p*100)+'%';
+    if(numEl) numEl.textContent=Math.floor(p*100);
+    if(p<1) requestAnimationFrame(step);
+    else { clearInterval(rot); done&&done(); }
+  }
+  requestAnimationFrame(step);
+}
+
+/* ---------------- GATE ---------------- */
+function checkCode(){
+  const v=document.getElementById('code').value.trim().toUpperCase();
+  if(v===CONFIG.ACCESS_CODE.toUpperCase()){
+    localStorage.setItem('ge_unlocked','1'); state.unlocked=true;
+    go('loader2');
+    setTimeout(()=>{ runBar(document.getElementById('bar2'), document.getElementById('pct2'), 2600, ()=>{
+      toast(t('enc_ok')); setTimeout(()=>go('home'), 500);
+    }); }, 200);
+  } else {
+    const e=document.getElementById('gateErr'); e.classList.add('on');
+    const c=document.getElementById('code'); c.classList.add('shake'); setTimeout(()=>c.classList.remove('shake'),450);
+  }
+}
+document.getElementById('code').addEventListener('keydown',e=>{ if(e.key==='Enter') checkCode(); });
+
+/* ---------------- BOOT ---------------- */
+function boot(){
+  buildLangs(); fillPrefixes(); applyI18n(); restoreCheckout();
+  go('loader1');
+  runBar(document.getElementById('bar1'), null, 2400, ()=>{
+    if(state.unlocked) go('home');
+    else go('gate');
+  });
+}
+boot();
+</script>
+</body>
+</html>
